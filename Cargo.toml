@@ -1,0 +1,35 @@
+[package]
+name = "wgpu_test"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = []
+webgl = ["wgpu/webgl"]
+
+[dependencies]
+env_logger = "0.11"
+log = "0.4"
+parking_lot = "0.12"
+winit = "0.30"
+wgpu = "27"
+cfg-if = "1.0.4"
+anyhow = "1.0.100"
+bytemuck = { version = "1.24.0", features = ["derive"] }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+# 需要避免在 wasm 中添加 pollster 依赖，否则会导致 wasm 加载时报错：
+# An error occurred loading "XXX": TypeError: Failed to resolve module specifier "env". Relative references must start with either "/", "./", or "../".
+pollster = "0.4.0"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_error_panic_hook = "0.1"
+console_log = "1"
+fern = "0.7.1"
+js-sys = "0.3.83"
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4.56"
+web-sys = { version = "0.3", features = ["Document", "Window", "Element"] }
+
+[lib]
+crate-type = ["cdylib", "rlib"]
